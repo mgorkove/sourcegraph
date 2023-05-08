@@ -89,18 +89,9 @@ export const PreviewSelectRow: React.FunctionComponent<React.PropsWithChildren<P
                 const dropdownAction: Action = {
                     ...action,
                     onTrigger: onDone => {
-                        const specIDs = selected === 'all' ? allChangesetSpecIDs : [...selected]
-                        if (!specIDs) {
-                            // allChangesetSpecIDs hasn't populated yet: it
-                            // shouldn't be possible to set selected to 'all' if
-                            // that's the case, but to be safe, we'll just bail
-                            // early if that somehow happens.
-                            return
-                        }
-
                         // Record the new desired publication state for each selected changeset.
                         updatePublicationStates(
-                            specIDs.map(changeSpecID => ({
+                            [...selected].map(changeSpecID => ({
                                 changesetSpec: changeSpecID,
                                 publicationState: getPublicationStateFromAction(action),
                             }))
@@ -112,7 +103,7 @@ export const PreviewSelectRow: React.FunctionComponent<React.PropsWithChildren<P
 
                 return dropdownAction
             }),
-        [allChangesetSpecIDs, deselectAll, selected, updatePublicationStates]
+        [deselectAll, selected, updatePublicationStates]
     )
 
     return (
