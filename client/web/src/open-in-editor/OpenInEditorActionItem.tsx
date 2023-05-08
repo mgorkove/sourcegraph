@@ -1,13 +1,13 @@
 import * as React from 'react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { from } from 'rxjs'
+import { Unsubscribable } from 'rxjs'
 
-import { logger } from '@sourcegraph/common'
+import { isErrorLike } from '@sourcegraph/common'
 import { SimpleActionItem } from '@sourcegraph/shared/src/actions/SimpleActionItem'
 import { PlatformContext } from '@sourcegraph/shared/src/platform/context'
-import { isSettingsValid, Settings } from '@sourcegraph/shared/src/settings/settings'
-import { Popover, PopoverContent, PopoverTrigger, Position, useObservable } from '@sourcegraph/wildcard'
+import { SettingsCascadeOrError } from '@sourcegraph/shared/src/settings/settings'
+import { Popover, PopoverContent, PopoverTrigger, Position } from '@sourcegraph/wildcard'
 
 import { eventLogger } from '../tracking/eventLogger'
 
@@ -18,26 +18,19 @@ import { migrateLegacySettings } from './migrate-legacy-settings'
 import { OpenInEditorPopover } from './OpenInEditorPopover'
 import { useOpenCurrentUrlInEditor } from './useOpenCurrentUrlInEditor'
 
-import styles from './OpenInEditorActionItem.module.scss'
-
 export interface OpenInEditorActionItemProps {
     platformContext: PlatformContext
-    externalServiceType?: string
     assetsRoot?: string
 }
-
-// We only want to attempt to upgrade the legacy open in editor settings once per
-// page load.
-let didAttemptToUpgradeSettings = false
 
 export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionItemProps> = props => {
     const assetsRoot = props.assetsRoot ?? (window.context?.assetsRoot || '')
 
-    const settingsOrError = useObservable(useMemo(() => from(props.platformContext.settings), [props.platformContext]))
-    const settings =
-        settingsOrError !== undefined && isSettingsValid(settingsOrError) ? settingsOrError.final : undefined
-    const userSettingsSubject = settingsOrError?.subjects
-        ? settingsOrError?.subjects.find(subject => subject.subject.__typename === 'User')?.subject.id
+    const [settingsCascadeOrError, setSettingsCascadeOrError] = useState<SettingsCascadeOrError | undefined>(undefined)
+    const settings = !isErrorLike(settingsCascadeOrError?.final) ? settingsCascadeOrError?.final : undefined
+    const [settingSubscription, setSettingSubscription] = useState<Unsubscribable | null>(null)
+    const userSettings = settingsCascadeOrError?.subjects
+        ? settingsCascadeOrError.subjects[settingsCascadeOrError.subjects.length - 1]
         : undefined
 
     const [popoverOpen, setPopoverOpen] = useState(false)
@@ -55,28 +48,47 @@ export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionI
     const editors = !editorSettingsErrorMessage ? editorIds.map(getEditor) : undefined
 
     useEffect(() => {
-        if (!settings || !userSettingsSubject || didAttemptToUpgradeSettings) {
-            return
+        setSettingSubscription(
+            props.platformContext.settings.subscribe(settings => {
+                if (settings.final) {
+                    /* Migrate legacy settings if needed */
+                    const subject = settings.subjects ? settings.subjects[settings.subjects.length - 1] : undefined
+                    if (subject?.settings && !isErrorLike(subject.settings) && !subject.settings.openInEditor) {
+                        const migratedSettings = migrateLegacySettings(subject.settings)
+                        props.platformContext
+                            .updateSettings(subject.subject.id, JSON.stringify(migratedSettings, null, 4))
+                            .then(() => {
+                                console.log('Migrated items successfully.')
+                            })
+                            .catch(() => {
+                                // TODO: Update failed, handle this later
+                            })
+                    }
+                    setSettingsCascadeOrError(settings)
+                }
+            })
+        )
+
+        return () => {
+            settingSubscription?.unsubscribe()
         }
-        didAttemptToUpgradeSettings = true
-        upgradeSettings(props.platformContext, settings, userSettingsSubject)
-    }, [props.platformContext, settings, userSettingsSubject])
+    }, [settingSubscription, props.platformContext.settings, props.platformContext])
 
     const onSave = useCallback(
         async (selectedEditorId: EditorId, defaultProjectPath: string): Promise<void> => {
-            if (!userSettingsSubject) {
+            if (!userSettings) {
                 throw new Error('No user settings. Not saving.')
             }
-            await props.platformContext.updateSettings(userSettingsSubject, {
+            await props.platformContext.updateSettings(userSettings.subject.id, {
                 path: ['openInEditor', 'projectPaths.default'],
                 value: defaultProjectPath,
             })
-            await props.platformContext.updateSettings(userSettingsSubject, {
+            await props.platformContext.updateSettings(userSettings.subject.id, {
                 path: ['openInEditor', 'editorIds'],
                 value: [selectedEditorId],
             })
         },
-        [props.platformContext, userSettingsSubject]
+        [props.platformContext, userSettings]
     )
 
     return editors ? (
@@ -87,35 +99,28 @@ export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionI
                         <SimpleActionItem
                             key={editor.id}
                             tooltip={`Open file in ${editor?.name}`}
-                            onSelect={() => {
+                            iconURL={`${assetsRoot}/img/editors/${editor.id}.svg`}
+                            onClick={() => {
                                 eventLogger.log('OpenInEditorClicked', { editor: editor.id }, { editor: editor.id })
                                 openCurrentUrlInEditor(
                                     settings?.openInEditor,
-                                    props.externalServiceType,
                                     props.platformContext.sourcegraphURL,
                                     index
                                 )
                             }}
-                        >
-                            <img
-                                src={`${assetsRoot}/img/editors/${editor.id}.svg`}
-                                alt={`Open file in ${editor?.name}`}
-                                className={styles.icon}
-                            />
-                        </SimpleActionItem>
+                        />
                     )
             )}
         </>
     ) : (
         <Popover isOpen={popoverOpen} onOpenChange={event => setPopoverOpen(event.isOpen)}>
             <PopoverTrigger as="div">
-                <SimpleActionItem tooltip="Set your preferred editor" isActive={popoverOpen} onSelect={togglePopover}>
-                    <img
-                        src={`${assetsRoot}/img/open-in-editor.svg`}
-                        alt="Set your preferred editor"
-                        className={styles.icon}
-                    />
-                </SimpleActionItem>
+                <SimpleActionItem
+                    tooltip="Set your preferred editor"
+                    isActive={popoverOpen}
+                    iconURL={`${assetsRoot}/img/open-in-editor.svg`}
+                    onClick={togglePopover}
+                />
             </PopoverTrigger>
             <PopoverContent position={Position.leftStart} className="pt-0 pb-0" aria-labelledby="repo-revision-popover">
                 <OpenInEditorPopover
@@ -127,22 +132,4 @@ export const OpenInEditorActionItem: React.FunctionComponent<OpenInEditorActionI
             </PopoverContent>
         </Popover>
     )
-}
-
-function upgradeSettings(platformContext: PlatformContext, settings: Settings, userSettingsSubject: string): void {
-    const openInEditor = migrateLegacySettings(settings)
-
-    if (openInEditor !== null) {
-        platformContext
-            .updateSettings(userSettingsSubject, {
-                path: ['openInEditor'],
-                value: openInEditor,
-            })
-            .then(() => {
-                logger.log('Migrated items successfully.')
-            })
-            .catch(error => {
-                logger.error('Setting migration failed.', error)
-            })
-    }
 }
