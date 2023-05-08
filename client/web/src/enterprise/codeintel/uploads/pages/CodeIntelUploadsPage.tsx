@@ -95,6 +95,8 @@ const filters: FilteredConnectionFilter[] = [
     },
 ]
 
+client/web/src/enterprise/codeintel/uploads/pages/CodeIntelUploadsPage.tsx
+
 export const CodeIntelUploadsPage: FunctionComponent<React.PropsWithChildren<CodeIntelUploadsPageProps>> = ({
     repo,
     queryLsifUploadsByRepository = defaultQueryLsifUploadsByRepository,
