@@ -258,16 +258,25 @@ export const CodeIntelUploadsPage: FunctionComponent<React.PropsWithChildren<Cod
                         nodeComponent={CodeIntelUploadNode}
                         nodeComponentProps={{ now, selection, onCheckboxToggle }}
                         queryConnection={args => {
-                            setArgs({
-                                query: args.query ?? null,
-                                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-                                state: (args as any).state ?? null,
-                                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-                                isLatestForRepo: (args as any).isLatestForRepo ?? null,
-                                repository: repo?.id ?? null,
-                            })
-                            setSelection(new Set())
-                            return queryLsifUploads(args)
+                            let isMounted = true;
+                            queryLsifUploads(args).then(result => {
+                                if (isMounted) {
+                                    setArgs({
+                                        query: args.query ?? null,
+                                        state: (args as any).state ?? null,
+                                        isLatestForRepo: (args as any).isLatestForRepo ?? null,
+                                        repository: repo?.id ?? null,
+                                    });
+                                    setSelection(new Set());
+                                }
+                            }).catch(error => {
+                                if (isMounted) {
+                                    console.error(error);
+                                }
+                            });
+                            return () => {
+                                isMounted = false;
+                            };
                         }}
                         history={history}
                         location={props.location}
