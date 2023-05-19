@@ -358,6 +358,12 @@ const stratoSpec: LanguageSpec = {
 }
 
 /**
+	const markdownSpec: LanguageSpec = {
+    languageID: 'markdown',
+    stylized: 'Markdown',
+    fileExts: ['md', 'markdown'],
+    commentStyles: [{ lineRegex: /\s*<!--/, 
+}
  * The specification of languages for which search-based code intelligence
  * is supported.
  *
@@ -381,6 +387,7 @@ export const languageSpecs: LanguageSpec[] = [
     javaSpec,
     jsonnetSpec,
     kotlinSpec,
+	markdownSpec,
     lispSpec,
     luaSpec,
     ocamlSpec,
