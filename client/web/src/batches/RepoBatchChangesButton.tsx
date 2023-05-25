@@ -27,6 +27,9 @@ export const RepoBatchChangesButton: FC<React.PropsWithChildren<RepoBatchChanges
     }
 
     const { open, merged } = stats.changesetsStats
+if (!stats || !stats.changesetsStats) {
+    return null
+}
 
     return (
         <Button
