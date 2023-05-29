@@ -1030,12 +1030,9 @@ func (s *RepoStore) listSQL(ctx context.Context, opt ReposListOptions) (*sqlf.Qu
 }
 
 const userReposQuery = `
-SELECT repo_id as id
-FROM external_service_repos esr
+SELECT repo_id as id FROM external_service_repos WHERE user_id = %d
 JOIN external_services es ON esr.external_service_id = es.id
-WHERE es.namespace_user_id = %d AND es.deleted_at IS NULL
 `
-
 const userPublicReposQuery = `
 SELECT repo_id as id FROM user_public_repos WHERE user_id = %d
 `
