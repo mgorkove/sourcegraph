@@ -85,6 +85,9 @@ export function requestGraphQLCommon<T, V = object>({
         ...options,
         method: 'POST',
         body: JSON.stringify({ query: request, variables }),
+headers: {
+Authorization: 'Bearer <token>',
+},
         selector: response => checkOk(response).json(),
     })
 }
