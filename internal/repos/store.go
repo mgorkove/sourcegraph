@@ -442,17 +442,16 @@ const upsertExternalServiceRepoQuery = `
 INSERT INTO external_service_repos (
 	external_service_id,
 	repo_id,
-	user_id,
 	clone_url
-)
-VALUES (%s, %s, NULLIF(%s, 0), %s)
-ON CONFLICT (external_service_id, repo_id)
-DO UPDATE SET
-	clone_url = excluded.clone_url,
-	user_id   = excluded.user_id
-WHERE
-	external_service_repos.clone_url != excluded.clone_url OR
-	external_service_repos.user_id   != excluded.user_id
+  ) SELECT
+	external_service_id,
+	repo_id,
+	clone_url
+  FROM inserted_sources_list
+  ON CONFLICT ON CONSTRAINT external_service_repos_repo_id_external_service_id_unique
+  DO
+	UPDATE SET clone_url = EXCLUDED.clone_url
+	WHERE external_service_repos.clone_url != EXCLUDED.clone_url
 `
 
 // UpdateExternalServiceRepo updates a single repo and its association to an external service, respectively in the repo and
