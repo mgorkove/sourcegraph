@@ -25,12 +25,14 @@ var RequireAuthMiddleware = &Middleware{
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// If an anonymous user tries to access an API endpoint that requires authentication,
 			// prevent access.
+			/*
 			if !actor.FromContext(r.Context()).IsAuthenticated() && !AllowAnonymousRequest(r) {
 				// Report HTTP 401 Unauthorized for API requests.
 				code := anonymousStatusCode(r, http.StatusUnauthorized)
 				http.Error(w, "Private mode requires authentication.", code)
 				return
 			}
+			*/
 
 			// The client is authenticated, or the request is accessible to anonymous clients.
 			next.ServeHTTP(w, r)

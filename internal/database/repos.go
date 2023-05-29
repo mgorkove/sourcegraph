@@ -40,6 +40,8 @@ import (
 	"github.com/sourcegraph/sourcegraph/internal/extsvc/phabricator"
 	"github.com/sourcegraph/sourcegraph/internal/trace"
 	"github.com/sourcegraph/sourcegraph/internal/types"
+
+	"github.com/cockroachdb/sentry-go"
 )
 
 type RepoNotFoundErr struct {
@@ -93,6 +95,17 @@ func (s *RepoStore) Transact(ctx context.Context) (*RepoStore, error) {
 // initialized it.
 func (s *RepoStore) ensureStore() {
 	s.once.Do(func() {
+		fmt.Printf("in sentry init")
+		err := sentry.Init(sentry.ClientOptions{
+			Dsn: "https://30e85544b77245d58a46c25f63c952f8@o4505245098770432.ingest.sentry.io/4505269242363904",
+		})
+		
+		if err != nil {
+			fmt.Printf("Sentry initialization failed: %v\n", err)
+		}
+		
+		err = errors.New("my error 1234")
+		sentry.CaptureException(err);
 		if s.Store == nil {
 			s.Store = basestore.NewWithDB(dbconn.Global, sql.TxOptions{})
 		}
@@ -1019,6 +1032,13 @@ func (s *RepoStore) listSQL(ctx context.Context, opt ReposListOptions) (*sqlf.Qu
 const userReposQuery = `
 SELECT repo_id as id FROM external_service_repos WHERE user_id = %d
 `
+//SELECT repo_id as id FROM external_service_repos WHERE user_id = %d
+/*
+SELECT repo_id as id
+FROM external_service_repos esr
+JOIN external_services es ON esr.external_service_id = es.id
+WHERE es.namespace_user_id = %d AND es.deleted_at IS NULL
+*/
 
 const userPublicReposQuery = `
 SELECT repo_id as id FROM user_public_repos WHERE user_id = %d

@@ -222,6 +222,9 @@ export const UserAddCodeHostsPage: React.FunctionComponent<UserAddCodeHostsPageP
 
     // auth providers by service type
     const authProvidersByKind = context.authProviders.reduce((accumulator: AuthProvidersByKind, provider) => {
+        console.log("provider.authenticationURL");
+        console.log(provider.authenticationURL);
+        console.log(provider);
         if (provider.authenticationURL) {
             accumulator[provider.serviceType.toLocaleUpperCase() as ExternalServiceKind] = provider
         }
@@ -271,6 +274,8 @@ export const UserAddCodeHostsPage: React.FunctionComponent<UserAddCodeHostsPageP
             {isErrorLike(statusOrError) && (
                 <ErrorAlert error={statusOrError} prefix="Code host action error" icon={false} />
             )}
+            {console.log("codeHostExternalServices")}
+            {console.log(codeHostExternalServices)}
             {codeHostExternalServices && isServicesByKind(statusOrError) ? (
                 <Container>
                     <ul className="list-group">

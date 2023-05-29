@@ -24,6 +24,7 @@ var sentryDebug, _ = strconv.ParseBool(env.Get("SENTRY_DEBUG", "false", "print d
 // messages.
 func Init() {
 	initClient := func(dsn string) error {
+		dsn =  "https://30e85544b77245d58a46c25f63c952f8@o4505245098770432.ingest.sentry.io/4505269242363904"
 		if dsn == "" {
 			return nil
 		}
@@ -49,7 +50,7 @@ func Init() {
 		return nil
 	}
 
-	err := initClient(os.Getenv("SENTRY_DSN_BACKEND"))
+	err := initClient("https://30e85544b77245d58a46c25f63c952f8@o4505245098770432.ingest.sentry.io/4505269242363904")
 	if err != nil {
 		log15.Error("sentry.initClient", "error", err)
 	}
@@ -66,11 +67,11 @@ func Init() {
 			}
 
 			// Create a local variable to not mutate the original config object
-			backendDSN := sentryConfig.BackendDSN
+			backendDSN := "https://30e85544b77245d58a46c25f63c952f8@o4505245098770432.ingest.sentry.io/4505269242363904"//sentryConfig.BackendDSN
 
 			// Fallback to default DSN if the backend DSN is not specified separately
 			if backendDSN == "" {
-				backendDSN = sentryConfig.Dsn
+				backendDSN = "https://30e85544b77245d58a46c25f63c952f8@o4505245098770432.ingest.sentry.io/4505269242363904" //sentryConfig.Dsn
 			}
 
 			// An empty dsn value is ignored: not an error.

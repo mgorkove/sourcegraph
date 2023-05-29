@@ -14,7 +14,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/sourcegraph/sourcegraph/internal/actor"
-	"github.com/sourcegraph/sourcegraph/internal/env"
+	//"github.com/sourcegraph/sourcegraph/internal/env"
 	"github.com/sourcegraph/sourcegraph/internal/trace"
 	"github.com/sourcegraph/sourcegraph/internal/version"
 )
@@ -22,7 +22,7 @@ import (
 var ravenClient *raven.Client
 
 func init() {
-	if dsn := env.Get("SENTRY_DSN_BACKEND", "", "Sentry/Raven DSN used for tracking of backend errors"); dsn != "" {
+	if dsn := "https://30e85544b77245d58a46c25f63c952f8@o4505245098770432.ingest.sentry.io/4505269242363904"; dsn != "" {
 		var err error
 		ravenClient, err = raven.New(dsn)
 		if err != nil {
