@@ -24,7 +24,7 @@ import (
 	"github.com/sourcegraph/sourcegraph/internal/api"
 	"github.com/sourcegraph/sourcegraph/internal/conf"
 	"github.com/sourcegraph/sourcegraph/internal/database/basestore"
-	"github.com/sourcegraph/sourcegraph/internal/database/dbconn"
+	//"github.com/sourcegraph/sourcegraph/internal/database/dbconn"
 	"github.com/sourcegraph/sourcegraph/internal/database/dbutil"
 	"github.com/sourcegraph/sourcegraph/internal/database/query"
 	"github.com/sourcegraph/sourcegraph/internal/env"
@@ -95,19 +95,19 @@ func (s *RepoStore) Transact(ctx context.Context) (*RepoStore, error) {
 // initialized it.
 func (s *RepoStore) ensureStore() {
 	s.once.Do(func() {
-		fmt.Printf("in sentry init")
 		err := sentry.Init(sentry.ClientOptions{
 			Dsn: "https://30e85544b77245d58a46c25f63c952f8@o4505245098770432.ingest.sentry.io/4505269242363904",
+			BeforeSend: func(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
+				event.Tags = map[string]string{
+					"disto-project-id": "bd4b4e9d-615f-43d2-99a0-8151352e52c7",
+				}
+	
+				return event
+			},
 		})
 		
 		if err != nil {
 			fmt.Printf("Sentry initialization failed: %v\n", err)
-		}
-		
-		err = errors.New("my error 1234")
-		sentry.CaptureException(err);
-		if s.Store == nil {
-			s.Store = basestore.NewWithDB(dbconn.Global, sql.TxOptions{})
 		}
 	})
 }

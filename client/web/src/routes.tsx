@@ -107,7 +107,7 @@ export const routes: readonly LayoutRouteProps<any>[] = [
         exact: true,
     },
     {
-        path: '/sign-in',
+        path: '/sign-',
         render: props => <SignInPage {...props} context={window.context} />,
         exact: true,
     },
