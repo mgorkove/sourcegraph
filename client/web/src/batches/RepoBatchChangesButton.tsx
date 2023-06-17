@@ -27,7 +27,7 @@ export const RepoBatchChangesButton: FC<RepoBatchChangesButtonProps> = ({
         return null
     }
 
-    const { open, merged } = stats.changesetsStats
+const { open, merged } = stats?.changesetsStats || {}
 
     return (
         <Link className={className} to={`/${encodeURIPathComponent(repoName)}/-/batch-changes`}>
