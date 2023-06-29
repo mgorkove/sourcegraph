@@ -24,6 +24,9 @@ export const RepoBatchChangesButton: FC<RepoBatchChangesButtonProps> = ({
     )
 
     if (!stats) {
+if (!stats || !stats.changesetsStats) {
+    return null
+}
         return null
     }
 
