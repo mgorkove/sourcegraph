@@ -88,8 +88,8 @@ function useCalculatedNavLinkVariant(
     const { width } = useWindowSize()
     const [savedWindowWidth, setSavedWindowWidth] = useState<number>()
 
-    useLayoutEffect(() => {
         const container = containerReference.current
+}, [containerReference.current, savedWindowWidth, width, authenticatedUser])
         if (!container) {
             return
         }
