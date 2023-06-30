@@ -89,6 +89,7 @@ function useCalculatedNavLinkVariant(
     const [savedWindowWidth, setSavedWindowWidth] = useState<number>()
 
     useLayoutEffect(() => {
+const prevAuthenticatedUser = usePrevious(authenticatedUser)
         const container = containerReference.current
         if (!container) {
             return
@@ -101,6 +102,7 @@ function useCalculatedNavLinkVariant(
         }
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
         // based on change in navbar's content.
+if (prevAuthenticatedUser !== authenticatedUser) return;
     }, [containerReference, savedWindowWidth, width, authenticatedUser])
 
     return navLinkVariant
