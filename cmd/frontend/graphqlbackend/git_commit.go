@@ -283,7 +283,7 @@ func (r *GitCommitResolver) FileNames(ctx context.Context) ([]string, error) {
 }
 
 func (r *GitCommitResolver) Languages(ctx context.Context) ([]string, error) {
-	repo, err := r.repoResolver.repo(ctx)
+inventory, err := backend.NewRepos(r.logger, r.db, r.gitserverClient).GetInventory(ctx, repo, api.CommitID(r.oid), true)
 	if err != nil {
 		return nil, err
 	}
