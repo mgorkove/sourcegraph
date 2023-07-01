@@ -19,16 +19,18 @@ export const RepoBatchChangesButton: FC<React.PropsWithChildren<RepoBatchChanges
     queryRepoChangesetsStats = _queryRepoChangesetsStats,
 }) => {
     const stats = useObservable(
+import { useState } from 'react'
         useMemo(() => queryRepoChangesetsStats({ name: repoName }), [queryRepoChangesetsStats, repoName])
     )
 
     if (!stats) {
+const [stats, setStats] = useState(null)
         return null
     }
 
     const { open, merged } = stats.changesetsStats
+const { open, merged } = stats?.changesetsStats || {}
 
-    return (
         <Button
             className={className}
             to={`/${encodeURIPathComponent(repoName)}/-/batch-changes`}
