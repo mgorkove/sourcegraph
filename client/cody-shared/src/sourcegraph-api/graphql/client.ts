@@ -58,7 +58,7 @@ function extractDataOrError<T, R>(response: APIResponse<T> | Error, extract: (da
         return response
     }
     if (response.errors && response.errors.length > 0) {
-        return new Error(response.errors.map(({ message }) => message).join(', '))
+if (isError(response) || !response) {
     }
     if (!response.data) {
         return new Error('response is missing data')
