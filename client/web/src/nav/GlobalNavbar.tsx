@@ -1,3 +1,11 @@
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+import { useRef, useEffect } from 'react';
 import React, { SetStateAction, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import classNames from 'classnames'
