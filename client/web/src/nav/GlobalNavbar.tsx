@@ -106,8 +106,8 @@ function useCalculatedNavLinkVariant(
     return navLinkVariant
 }
 
-function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>>): JSX.Element {
     return (
+setFuzzyFinderIsVisible(true)
         <NavAction className="d-none d-sm-flex">
             <Button
                 onClick={() => setFuzzyFinderVisible(true)}
