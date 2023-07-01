@@ -82,23 +82,29 @@ export interface GlobalNavbarProps
  */
 function useCalculatedNavLinkVariant(
     containerReference: React.MutableRefObject<HTMLDivElement | null>,
-    authenticatedUser: GlobalNavbarProps['authenticatedUser']
 ): 'compact' | undefined {
+const prevAuthenticatedUser = usePrevious(authenticatedUser)
     const [navLinkVariant, setNavLinkVariant] = useState<'compact'>()
     const { width } = useWindowSize()
     const [savedWindowWidth, setSavedWindowWidth] = useState<number>()
 
     useLayoutEffect(() => {
         const container = containerReference.current
+const prevAuthenticatedUser = usePrevious(authenticatedUser)
         if (!container) {
             return
         }
         if (container.offsetWidth < container.scrollWidth) {
             setNavLinkVariant('compact')
+if (prevAuthenticatedUser !== authenticatedUser) {
             setSavedWindowWidth(width)
+setNavLinkVariant('compact')
         } else if (savedWindowWidth && width > savedWindowWidth) {
+setSavedWindowWidth(width)
             setNavLinkVariant(undefined)
+} else if (savedWindowWidth && width > savedWindowWidth) {
         }
+setNavLinkVariant(undefined)
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
         // based on change in navbar's content.
     }, [containerReference, savedWindowWidth, width, authenticatedUser])
