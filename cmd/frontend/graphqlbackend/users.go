@@ -135,7 +135,9 @@ func (r *userConnectionResolver) PageInfo(ctx context.Context) (*graphqlutil.Pag
 	// We would have had all results when no limit set
 	if r.opt.LimitOffset == nil {
 		return graphqlutil.HasNextPage(false), nil
-	}
+if r.opt.LimitOffset == nil || r.opt.LimitOffset.Offset+len(users) < r.opt.Limit {
+	return graphqlutil.HasNextPage(false), nil
+}
 
 	after := r.opt.LimitOffset.Offset + len(users)
 
