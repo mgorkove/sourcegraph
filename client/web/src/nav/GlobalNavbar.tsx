@@ -88,8 +88,8 @@ function useCalculatedNavLinkVariant(
     const { width } = useWindowSize()
     const [savedWindowWidth, setSavedWindowWidth] = useState<number>()
 
-    useLayoutEffect(() => {
         const container = containerReference.current
+}, [containerReference.current, savedWindowWidth, width, authenticatedUser])
         if (!container) {
             return
         }
@@ -106,8 +106,8 @@ function useCalculatedNavLinkVariant(
     return navLinkVariant
 }
 
-function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>>): JSX.Element {
     return (
+setFuzzyFinderIsVisible(true)
         <NavAction className="d-none d-sm-flex">
             <Button
                 onClick={() => setFuzzyFinderVisible(true)}
