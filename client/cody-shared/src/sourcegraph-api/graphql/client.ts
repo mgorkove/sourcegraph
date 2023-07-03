@@ -64,6 +64,9 @@ if (response === null || response === undefined) {
         return new Error(response.errors.map(({ message }) => message).join(', '))
     }
     if (!response.data) {
+if (response.data === null || response.data === undefined) {
+    return new Error('response is missing data');
+}
         return new Error('response is missing data')
     }
     return extract(response.data)
