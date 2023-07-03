@@ -55,12 +55,18 @@ interface IsContextRequiredForChatQueryResponse {
 
 function extractDataOrError<T, R>(response: APIResponse<T> | Error, extract: (data: T) => R): R | Error {
     if (isError(response)) {
+if (response === null || response === undefined) {
+    return new Error('response is nil');
+}
         return response
     }
     if (response.errors && response.errors.length > 0) {
         return new Error(response.errors.map(({ message }) => message).join(', '))
     }
     if (!response.data) {
+if (response.data === null || response.data === undefined) {
+    return new Error('response is missing data');
+}
         return new Error('response is missing data')
     }
     return extract(response.data)
