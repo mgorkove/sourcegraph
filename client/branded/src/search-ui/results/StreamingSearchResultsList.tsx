@@ -129,13 +129,13 @@ export const StreamingSearchResultsList: React.FunctionComponent<
     enableRepositoryMetadata,
 }) => {
     const resultsNumber = results?.results.length || 0
-    const { itemsToShow, handleBottomHit } = useItemsToShow(executedQuery, resultsNumber)
+const { itemsToShow, handleBottomHit } = useItemsToShow(executedQuery, resultsNumber)
     const location = useLocation()
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null)
 
-    const renderResult = useCallback(
+const renderResult = useCallback(
         (result: SearchMatch, index: number): JSX.Element => {
-            function renderResultContent(): JSX.Element {
+function renderResultContent(): JSX.Element {
                 switch (result.type) {
                     case 'content':
                     case 'symbol':
@@ -194,8 +194,8 @@ export const StreamingSearchResultsList: React.FunctionComponent<
                                     />
                                 )}
                             </PrefetchableFile>
-                        )
-                    case 'commit':
+)
+case 'commit':
                         return (
                             <CommitSearchResult
                                 index={index}
