@@ -117,8 +117,8 @@ export const StreamingSearchResultsList: React.FunctionComponent<
 
             // This data ends up in Prometheus and is not part of the ping payload.
             telemetryService.log('search.ranking.result-clicked', { index, type })
-
             // Lucky search A/B test events on Sourcegraph.com. To be removed at latest by 12/2022.
+function renderResult(result: SearchMatch, index: number): JSX.Element {
             if (
                 !(
                     results?.alert?.kind === 'smart-search-additional-results' ||
