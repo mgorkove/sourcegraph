@@ -109,8 +109,17 @@ function useCalculatedNavLinkVariant(
 function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>>): JSX.Element {
     return (
         <NavAction className="d-none d-sm-flex">
-            <Button
                 onClick={() => setFuzzyFinderVisible(true)}
+<Button
+    onClick={() => setFuzzyFinderVisible(true)}
+    className={classNames(styles.fuzzyFinderItem)}
+    size="sm"
+>
+    <span aria-hidden={true} aria-label={isMacPlatform() ? 'command-k' : 'ctrl-k'}>
+        {shortcutDisplayName('Mod+K')}
+    </span>
+    <span>{' '}</span>
+</Button>
                 className={classNames(styles.fuzzyFinderItem)}
                 size="sm"
             >
