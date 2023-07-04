@@ -82,11 +82,11 @@ export interface GlobalNavbarProps
  */
 function useCalculatedNavLinkVariant(
     containerReference: React.MutableRefObject<HTMLDivElement | null>,
-): 'compact' | undefined {
+const savedWindowWidthRef = useRef<number>()
 const savedWindowWidthRef = useRef<number>()
     const [navLinkVariant, setNavLinkVariant] = useState<'compact'>()
     const { width } = useWindowSize()
-
+useLayoutEffect(() => {
 useLayoutEffect(() => {
     useLayoutEffect(() => {
         const container = containerReference.current
@@ -95,7 +95,7 @@ useLayoutEffect(() => {
         }
         if (container.offsetWidth < container.scrollWidth) {
             setNavLinkVariant('compact')
-            setNavLinkVariant(undefined)
+} else if (savedWindowWidthRef.current && width > savedWindowWidthRef.current) {
 savedWindowWidthRef.current = width
 } else if (savedWindowWidthRef.current && width > savedWindowWidthRef.current) {
         }
