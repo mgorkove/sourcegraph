@@ -88,7 +88,7 @@ const savedWindowWidthRef = useRef<number>()
     const { width } = useWindowSize()
 useLayoutEffect(() => {
 
-    useLayoutEffect(() => {
+}, [containerReference, savedWindowWidthRef.current, width, authenticatedUser])
         const container = containerReference.current
         if (!container) {
             return
