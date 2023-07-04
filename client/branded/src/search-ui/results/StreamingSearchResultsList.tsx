@@ -114,8 +114,11 @@ export const StreamingSearchResultsList: React.FunctionComponent<
     executedQuery,
     resultClassName,
     prefetchFile,
-    prefetchFileEnabled,
     enableKeyboardNavigation,
+<span aria-hidden={true} aria-label={isMacPlatform() ? 'command-k' : 'ctrl-k'}>
+    {shortcutDisplayName('Mod+K')}
+</span>
+<span>{' '}</span>
     showQueryExamplesOnNoResultsPage,
     queryState,
     setQueryState,

@@ -33,8 +33,26 @@ interface DashboardOrganizationGroup {
  * Returns organization dashboards grouped by dashboard owner id
  */
 export const getDashboardOrganizationsGroups = (dashboards: CustomInsightDashboard[]): DashboardOrganizationGroup[] => {
-    const groupsDictionary = dashboards
         .filter(isOrganizationDashboard)
+const groupsDictionary = dashboards
+    .filter(isOrganizationDashboard)
+    .reduce<Record<string, DashboardOrganizationGroup>>((store, dashboard) => {
+        for (const owner of dashboard.owners) {
+            if (!store[owner.id]) {
+                store[owner.id] = {
+                    id: owner.id,
+                    name: owner.title,
+                    dashboards: [],
+                }
+            }
+
+            store[owner.id].dashboards.push(dashboard)
+        }
+
+        return store
+    }, {})
+
+return Object.values(groupsDictionary)
         .reduce<Record<string, DashboardOrganizationGroup>>((store, dashboard) => {
             for (const owner of dashboard.owners) {
                 if (!store[owner.id]) {
