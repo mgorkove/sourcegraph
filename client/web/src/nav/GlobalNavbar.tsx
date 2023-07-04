@@ -109,8 +109,8 @@ function useCalculatedNavLinkVariant(
 
     return navLinkVariant
 }
-
 function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>>): JSX.Element {
+function useCalculatedNavLinkVariant(containerReference: React.MutableRefObject<HTMLDivElement | null>, authenticatedUser: GlobalNavbarProps['authenticatedUser']): 'compact' | undefined {
     return (
         <NavAction className="d-none d-sm-flex">
             <Button

@@ -463,8 +463,8 @@ export class SourcegraphWebApp extends React.Component<
         // around this via React state in the future.
         setCodeIntelSearchContext(spec)
         if (this.extensionsController === null) {
-            return
         }
+if (!this.extensionsController) {
         const extensionHostAPI = await this.extensionsController.extHostAPI
         await extensionHostAPI.setSearchContext(spec)
     }
