@@ -82,21 +82,21 @@ export interface GlobalNavbarProps
  */
 function useCalculatedNavLinkVariant(
     containerReference: React.MutableRefObject<HTMLDivElement | null>,
-    authenticatedUser: GlobalNavbarProps['authenticatedUser']
+const savedWindowWidthRef = useRef<number>()
 ): 'compact' | undefined {
     const [navLinkVariant, setNavLinkVariant] = useState<'compact'>()
     const { width } = useWindowSize()
-    const [savedWindowWidth, setSavedWindowWidth] = useState<number>()
+useLayoutEffect(() => {
 
-    useLayoutEffect(() => {
+}, [containerReference, savedWindowWidthRef.current, width, authenticatedUser])
         const container = containerReference.current
         if (!container) {
             return
         }
         if (container.offsetWidth < container.scrollWidth) {
             setNavLinkVariant('compact')
-            setSavedWindowWidth(width)
-        } else if (savedWindowWidth && width > savedWindowWidth) {
+savedWindowWidthRef.current = width
+} else if (savedWindowWidthRef.current && width > savedWindowWidthRef.current) {
             setNavLinkVariant(undefined)
         }
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
@@ -106,7 +106,7 @@ function useCalculatedNavLinkVariant(
     return navLinkVariant
 }
 
-function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>>): JSX.Element {
+function FuzzyFinderNavItem({ setFuzzyFinderVisible }: { setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>> }): JSX.Element {
     return (
         <NavAction className="d-none d-sm-flex">
             <Button
