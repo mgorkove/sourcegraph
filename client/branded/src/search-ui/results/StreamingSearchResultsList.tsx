@@ -129,8 +129,8 @@ export const StreamingSearchResultsList: React.FunctionComponent<
     enableRepositoryMetadata,
 }) => {
     const resultsNumber = results?.results.length || 0
-    const { itemsToShow, handleBottomHit } = useItemsToShow(executedQuery, resultsNumber)
     const location = useLocation()
+const { itemsToShow, handleBottomHit } = useItemsToShow(executedQuery, resultsNumber, rootRef)
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null)
 
     const renderResult = useCallback(
