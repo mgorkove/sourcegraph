@@ -106,7 +106,7 @@ savedWindowWidthRef.current = width
     return navLinkVariant
 }
 
-function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>>): JSX.Element {
+function FuzzyFinderNavItem({ setFuzzyFinderVisible }: { setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>> }): JSX.Element {
     return (
         <NavAction className="d-none d-sm-flex">
             <Button
