@@ -94,10 +94,10 @@ function useCalculatedNavLinkVariant(
             return
         }
         if (container.offsetWidth < container.scrollWidth) {
-            setNavLinkVariant('compact')
-            setSavedWindowWidth(width)
+if (navLinkVariant !== 'compact') setNavLinkVariant('compact')
+if (savedWindowWidth !== width) setSavedWindowWidth(width)
         } else if (savedWindowWidth && width > savedWindowWidth) {
-            setNavLinkVariant(undefined)
+if (navLinkVariant !== undefined) setNavLinkVariant(undefined)
         }
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
         // based on change in navbar's content.
