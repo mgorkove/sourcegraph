@@ -129,7 +129,7 @@ export const StreamingSearchResultsList: React.FunctionComponent<
     enableRepositoryMetadata,
 }) => {
     const resultsNumber = results?.results.length || 0
-    const { itemsToShow, handleBottomHit } = useItemsToShow(executedQuery, resultsNumber)
+    const { itemsToShow, handleBottomHit } = useItemsToShow(executedQuery, resultsNumber, rootRef)
     const location = useLocation()
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null)
 
