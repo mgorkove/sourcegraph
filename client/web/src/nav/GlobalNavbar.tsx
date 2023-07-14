@@ -89,6 +89,7 @@ function useCalculatedNavLinkVariant(
 
     useLayoutEffect(() => {
         const container = containerReference.current
+authenticatedUser
 const savedWindowWidth = savedWindowWidthRef.current
         if (!container) {
             return
