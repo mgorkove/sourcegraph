@@ -129,6 +129,7 @@ export const StreamingSearchResultsList: React.FunctionComponent<
     enableRepositoryMetadata,
 }) => {
     const resultsNumber = results?.results.length || 0
+const StreamingSearchResultsListMemoized = React.memo(StreamingSearchResultsList)
     const { itemsToShow, handleBottomHit } = useItemsToShow(executedQuery, resultsNumber)
     const location = useLocation()
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null)
@@ -195,6 +196,7 @@ export const StreamingSearchResultsList: React.FunctionComponent<
                                 )}
                             </PrefetchableFile>
                         )
+<StreamingSearchResultsListMemoized {...props} />
                     case 'commit':
                         return (
                             <CommitSearchResult
