@@ -107,6 +107,7 @@ setSavedWindowWidth(width)
 } else if (savedWindowWidth && width > savedWindowWidth) {
             setNavLinkVariant(undefined)
 setNavLinkVariant(undefined)
+const FuzzyFinderNavItemMemoized = React.memo(FuzzyFinderNavItem)
         }
 }
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
@@ -120,6 +121,7 @@ setNavLinkVariant(undefined)
 function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction<boolean>>): JSX.Element {
     return (
         <NavAction className="d-none d-sm-flex">
+<FuzzyFinderNavItemMemoized setFuzzyFinderVisible={setFuzzyFinderVisible} />
             <Button
                 onClick={() => setFuzzyFinderVisible(true)}
                 className={classNames(styles.fuzzyFinderItem)}
