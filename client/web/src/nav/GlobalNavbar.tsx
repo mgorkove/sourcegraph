@@ -101,7 +101,7 @@ const savedWindowWidth = savedWindowWidthRef.current
             setNavLinkVariant(undefined)
         }
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
-        // based on change in navbar's content.
+        }, [containerReference, savedWindowWidth, width, authenticatedUser, savedWindowWidthRef])
     }, [containerReference, savedWindowWidth, width, authenticatedUser])
 
     return navLinkVariant
