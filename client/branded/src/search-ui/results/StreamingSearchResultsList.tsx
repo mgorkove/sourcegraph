@@ -134,6 +134,7 @@ export const StreamingSearchResultsList: React.FunctionComponent<
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null)
 
     const renderResult = useCallback(
+const renderResult = useCallback((result: SearchMatch, index: number): JSX.Element => {
         (result: SearchMatch, index: number): JSX.Element => {
             function renderResultContent(): JSX.Element {
                 switch (result.type) {
@@ -194,6 +195,7 @@ export const StreamingSearchResultsList: React.FunctionComponent<
                                     />
                                 )}
                             </PrefetchableFile>
+}, [prefetchFileEnabled, prefetchFile, location, telemetryService, logSearchResultClicked, allExpanded, fetchHighlightedFileLineRanges, settingsCascade, openMatchesInNewTab, resultClassName])
                         )
                     case 'commit':
                         return (
