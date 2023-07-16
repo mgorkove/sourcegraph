@@ -107,6 +107,7 @@ setSavedWindowWidth(width)
 } else if (prevContainerWidth !== null && prevContainerWidth >= container.offsetWidth) {
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
 setNavLinkVariant(undefined)
+const FuzzyFinderNavItemMemoized = React.memo(FuzzyFinderNavItem)
         // based on change in navbar's content.
     }, [containerReference, savedWindowWidth, width, authenticatedUser])
 
@@ -122,6 +123,7 @@ function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction
                 size="sm"
             >
                 <span aria-hidden={true} aria-label={isMacPlatform() ? 'command-k' : 'ctrl-k'}>
+<FuzzyFinderNavItemMemoized setFuzzyFinderVisible={setFuzzyFinderVisible} />
                     {shortcutDisplayName('Mod+K')}
                 </span>
             </Button>
