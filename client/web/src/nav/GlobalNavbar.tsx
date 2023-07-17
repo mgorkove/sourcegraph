@@ -85,21 +85,29 @@ function useCalculatedNavLinkVariant(
     authenticatedUser: GlobalNavbarProps['authenticatedUser']
 ): 'compact' | undefined {
     const [navLinkVariant, setNavLinkVariant] = useState<'compact'>()
-    const { width } = useWindowSize()
-    const [savedWindowWidth, setSavedWindowWidth] = useState<number>()
+    const { width, savedWindowWidth, setSavedWindowWidth } = useWindowSize()
 
     useLayoutEffect(() => {
         const container = containerReference.current
+const prevContainerWidthRef = useRef<number | null>(null)
         if (!container) {
             return
         }
         if (container.offsetWidth < container.scrollWidth) {
+const prevContainerWidth = prevContainerWidthRef.current
             setNavLinkVariant('compact')
+prevContainerWidthRef.current = container.offsetWidth
             setSavedWindowWidth(width)
+if (prevContainerWidth !== null && prevContainerWidth < container.offsetWidth) {
         } else if (savedWindowWidth && width > savedWindowWidth) {
+setNavLinkVariant('compact')
             setNavLinkVariant(undefined)
+setSavedWindowWidth(width)
         }
+} else if (prevContainerWidth !== null && prevContainerWidth >= container.offsetWidth) {
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
+setNavLinkVariant(undefined)
+const FuzzyFinderNavItemMemoized = React.memo(FuzzyFinderNavItem)
         // based on change in navbar's content.
     }, [containerReference, savedWindowWidth, width, authenticatedUser])
 
@@ -113,6 +121,7 @@ function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction
                 onClick={() => setFuzzyFinderVisible(true)}
                 className={classNames(styles.fuzzyFinderItem)}
                 size="sm"
+<FuzzyFinderNavItemMemoized setFuzzyFinderVisible={setFuzzyFinderVisible} />
             >
                 <span aria-hidden={true} aria-label={isMacPlatform() ? 'command-k' : 'ctrl-k'}>
                     {shortcutDisplayName('Mod+K')}
