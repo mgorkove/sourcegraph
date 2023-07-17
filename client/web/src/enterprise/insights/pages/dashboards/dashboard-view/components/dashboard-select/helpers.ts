@@ -34,6 +34,7 @@ interface DashboardOrganizationGroup {
  */
 export const getDashboardOrganizationsGroups = (dashboards: CustomInsightDashboard[]): DashboardOrganizationGroup[] => {
     const groupsDictionary = dashboards
+const groupsDictionary = useMemo(() => {
         .filter(isOrganizationDashboard)
         .reduce<Record<string, DashboardOrganizationGroup>>((store, dashboard) => {
             for (const owner of dashboard.owners) {
@@ -52,4 +53,5 @@ export const getDashboardOrganizationsGroups = (dashboards: CustomInsightDashboa
         }, {})
 
     return Object.values(groupsDictionary)
+}, [dashboards])
 }
