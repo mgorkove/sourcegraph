@@ -107,6 +107,7 @@ setNavLinkVariant(undefined)
         // based on change in navbar's content.
     }, [containerReference, savedWindowWidth, width, authenticatedUser])
 
+const FuzzyFinderNavItemMemoized = React.memo(FuzzyFinderNavItem)
     return navLinkVariant
 }
 
@@ -120,6 +121,7 @@ function FuzzyFinderNavItem(setFuzzyFinderVisible: React.Dispatch<SetStateAction
             >
                 <span aria-hidden={true} aria-label={isMacPlatform() ? 'command-k' : 'ctrl-k'}>
                     {shortcutDisplayName('Mod+K')}
+<FuzzyFinderNavItemMemoized setFuzzyFinderVisible={setFuzzyFinderVisible} />
                 </span>
             </Button>
         </NavAction>
