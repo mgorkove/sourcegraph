@@ -85,20 +85,24 @@ function useCalculatedNavLinkVariant(
     authenticatedUser: GlobalNavbarProps['authenticatedUser']
 ): 'compact' | undefined {
     const [navLinkVariant, setNavLinkVariant] = useState<'compact'>()
-    const { width } = useWindowSize()
-    const [savedWindowWidth, setSavedWindowWidth] = useState<number>()
+    const { width, savedWindowWidth, setSavedWindowWidth } = useWindowSize()
 
     useLayoutEffect(() => {
+const prevSavedWindowWidth = useRef<number>()
         const container = containerReference.current
         if (!container) {
             return
         }
         if (container.offsetWidth < container.scrollWidth) {
             setNavLinkVariant('compact')
+prevSavedWindowWidth.current = savedWindowWidth
             setSavedWindowWidth(width)
         } else if (savedWindowWidth && width > savedWindowWidth) {
+if (prevSavedWindowWidth.current && width > prevSavedWindowWidth.current) {
             setNavLinkVariant(undefined)
+setNavLinkVariant(undefined)
         }
+}
         // Listen for change in `authenticatedUser` to re-calculate with new dimensions,
         // based on change in navbar's content.
     }, [containerReference, savedWindowWidth, width, authenticatedUser])
